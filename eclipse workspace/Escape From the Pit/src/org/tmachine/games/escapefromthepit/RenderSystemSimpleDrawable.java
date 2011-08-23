@@ -179,6 +179,10 @@ public class RenderSystemSimpleDrawable implements SubSystem
 				starPositions[i].height = 2;
 			}
 		}
+		
+		p.setARGB(255, 255, 128, 128);
+		p.setTextSize(20);
+		c.drawText("Default Background (stars)", 100, 100, p);
 	}
 	
 	protected boolean isOnscreen( Position p )

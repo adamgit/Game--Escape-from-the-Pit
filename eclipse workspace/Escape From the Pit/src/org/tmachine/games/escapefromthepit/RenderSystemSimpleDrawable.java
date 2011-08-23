@@ -6,8 +6,10 @@ import org.tmachine.games.escapefromthepit.Components.CAndroidDrawable;
 import org.tmachine.games.escapefromthepit.Components.Movable;
 import org.tmachine.games.escapefromthepit.Components.Position;
 
+import android.*;
 import android.graphics.*;
 import android.graphics.drawable.*;
+import android.util.*;
 import android.view.*;
 
 import com.wikidot.entitysystems.rdbmsbeta.*;
@@ -33,7 +35,7 @@ public class RenderSystemSimpleDrawable implements SubSystem
 		 * lots and lots of boilerplate code 
 		 */
 		drawablesCache = new HashMap<Integer, Drawable>();
-		encacheDrawable( R.drawable.medicine );
+		encacheDrawable( R.drawable.rock2 );
 		/*encacheDrawable( R.drawable.rot2 );
 		encacheDrawable( R.drawable.rot3 );
 		encacheDrawable( R.drawable.spikey_level1 );
@@ -76,6 +78,9 @@ public class RenderSystemSimpleDrawable implements SubSystem
 		 * just paint everything that has a CAndroidDrawable component
 		 */
 		Set<UUID> allDrawables = entitySystem.getAllEntitiesPossessingComponent( CAndroidDrawable.class );
+		
+		//DEBUG: Log.i(getClass().getName(), "Found "+allDrawables.size()+" CAndroidDrawables to render");
+		
 		Paint paint = new Paint();
 		paint.setARGB( 255, 127, 0, 0 );
 		for( UUID entityID : allDrawables )
@@ -112,7 +117,10 @@ public class RenderSystemSimpleDrawable implements SubSystem
 	 */
 	protected void positionAndDraw( Position p, Drawable d )
 	{
-		d.setBounds( (int) p.x - d.getIntrinsicWidth() / 2, (int) p.y - d.getIntrinsicHeight() / 2, (int) p.x + d.getIntrinsicWidth() / 2, (int) p.y + d.getIntrinsicHeight() / 2 );
+		int w = p.width < 1 ? d.getIntrinsicWidth() : p.width;
+		int h = p.height < 1 ? d.getIntrinsicHeight() : p.height;
+		
+		d.setBounds( (int) p.x - w / 2, (int) p.y - h / 2, (int) p.x + w / 2, (int) p.y + h / 2 );
 		d.draw( canvas );
 	}
 	

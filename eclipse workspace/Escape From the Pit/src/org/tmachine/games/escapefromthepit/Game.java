@@ -2,10 +2,11 @@ package org.tmachine.games.escapefromthepit;
 
 import java.util.*;
 
-import org.tmachine.games.escapefromthepit.Components.Position;
+import org.tmachine.games.escapefromthepit.Components.*;
 
 import com.wikidot.entitysystems.rdbmsbeta.*;
 
+import android.*;
 import android.util.*;
 
 public class Game
@@ -27,6 +28,26 @@ public class Game
 	
 	protected void preSetupGame()
 	{
+		boolean[][] stones = new boolean[7][7];
+		for( int k=0; k<stones[0].length; k++ )
+			for( int i=0; i<stones.length; i++ )
+			{
+				if( i==0 || k==0 || i==stones.length-1 || k==stones[0].length-1 )
+					stones[i][k] = true;
+			}
+		
+		stones[2][1] = stones[2][2] = stones[2][3] = stones[2][4] = true;
+		stones[4][5] = stones[4][4] = stones[4][3] = stones[4][2] = true;
+		
+		for( int k=0; k<stones[0].length; k++ )
+			for( int i=0; i<stones.length; i++ )
+			{
+				if( stones[i][k] )
+					new MetaEntity( new Position(100 + 100*i, 100 + 100*k, 100, 100), new CAndroidDrawable( R.drawable.rock2));
+			}
+		
+		new MetaEntity( new Position( 600, 600, 100, 100), new CAndroidDrawable( R.drawable.rock2));
+		
 		/*
 		Position p1 = new Position();
 		StraightShooter sh1 = new StraightShooter();
@@ -75,7 +96,8 @@ public class Game
 		/**
 		 * 
 		 */
-		for( UUID entity : allMovables )
+		if( false) 
+			for( UUID entity : allMovables )
 		{
 			MetaEntity e = MetaEntity.loadFromEntityManager(entity);
 			

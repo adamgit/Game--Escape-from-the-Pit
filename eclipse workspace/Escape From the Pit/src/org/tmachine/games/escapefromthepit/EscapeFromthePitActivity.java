@@ -1,5 +1,7 @@
 package org.tmachine.games.escapefromthepit;
 
+import java.util.*;
+
 import android.os.*;
 import android.util.*;
 import android.view.*;
@@ -11,16 +13,26 @@ public class EscapeFromthePitActivity extends BetterActivity
 	EntityManager em;
 	
 	/** Called when the activity is first created. */
-	/*@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
 		
-		
+		ArrayList<EntityManager> cachedData = (ArrayList<EntityManager>) getLastNonConfigurationInstance();
+		if( cachedData != null )
+		{
+			Log.i( getClass().getSimpleName(), "onCreate: ... found a LastNonConfigurationInstance, attempting to load it..." );
+			em = (EntityManager) cachedData.get( 0 );
+			
+			
+			/**
+			 * We loaded a cached copy of the ES, so have to manually do this auto-setup
+			 */
+			MetaEntity.defaultEntityManager = em;
+		}
+
 		
 		Log.i(""+this.getClass(), "activity onCreate");
-	}*/
+	}
 	
 	protected void handleActivityCreatedFirstTime()
 	{
@@ -38,12 +50,20 @@ public class EscapeFromthePitActivity extends BetterActivity
 		Log.i(""+this.getClass(), "activity returned to screen");
 	}
 	
+	protected Object handleAutoRotateSaveState()
+	{
+		ArrayList<EntityManager> l = new ArrayList<EntityManager>();
+		l.add( em );
+		return l;
+	}
+	
 	@Override
 	protected void onStart()
 	{
 		super.onStart();
 		
 		em = new EntityManager();
+		MetaEntity.defaultEntityManager = em;
 		Game game = new Game( em );
 		
 		/**

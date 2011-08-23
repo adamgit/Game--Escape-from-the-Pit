@@ -226,7 +226,7 @@ public class MainRunThread extends Thread implements iRunThread
 				int frameTimesPerSample = 25;
 				if( currentFrameIndex % frameTimesPerSample == 0 )
 				{
-					Log.i( getClass().getSimpleName(), "Averaged frame rate = " + frameTimesPerSample * 1000 / currentFrameTimesAccumulated + " fps" );
+					//DEBUG: Log.i( getClass().getSimpleName(), "Averaged frame rate = " + frameTimesPerSample * 1000 / currentFrameTimesAccumulated + " fps" );
 					currentFrameTimesAccumulated = 0;
 				}
 				

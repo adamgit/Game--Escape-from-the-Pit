@@ -7,6 +7,16 @@ public class Components
 	public static class CAndroidDrawable implements Component
 	{
 		int resourceID;
+		
+		public CAndroidDrawable()
+		{
+			// TODO Auto-generated constructor stub
+		}
+		
+		public CAndroidDrawable( int rid )
+		{
+			resourceID = rid;
+		}
 	}
 	
 	static class Position implements Component
@@ -14,6 +24,19 @@ public class Components
 		float x, y;
 		int width, height;
 		float rotationDegrees;
+		
+		public Position()
+		{
+			// TODO Auto-generated constructor stub
+		}
+		
+		public Position( float x, float y, int width, int height)
+		{
+			this.x = x;
+			this.y = y;
+			this.width = width;
+			this.height = height;
+		}
 		
 		@Override public String toString()
 		{

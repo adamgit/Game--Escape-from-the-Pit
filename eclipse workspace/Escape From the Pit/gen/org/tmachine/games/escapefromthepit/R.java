@@ -16,7 +16,11 @@ public final class R {
         public static final int arrowleft=0x7f020002;
         public static final int arrowright=0x7f020003;
         public static final int arrowup=0x7f020004;
-        public static final int rock2=0x7f020005;
+        public static final int ghostleft=0x7f020005;
+        public static final int ghostright=0x7f020006;
+        public static final int personleft=0x7f020007;
+        public static final int personright=0x7f020008;
+        public static final int rock2=0x7f020009;
     }
     public static final class layout {
         public static final int main=0x7f030000;

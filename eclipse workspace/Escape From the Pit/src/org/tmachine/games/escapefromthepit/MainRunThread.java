@@ -148,7 +148,8 @@ public class MainRunThread extends Thread implements iRunThread
 		
 		loadFirstLevel();
 		
-		loadAllCoreSubSystems();
+		if( orderedSubSystems == null )
+			throw new IllegalStateException("Cannot start a MainRunThread until you've loaded all SubSystems; try calling loadAllCoreSubSystems() first" );
 		
 		/***********************************************************************
 		 *         START OF MAIN BODY OF RUN LOOP

@@ -7,6 +7,8 @@ import org.tmachine.games.escapefromthepit.Components.Movable;
 import org.tmachine.games.escapefromthepit.Components.Position;
 
 import android.*;
+import android.R.*;
+import android.content.res.Resources.*;
 import android.graphics.*;
 import android.graphics.drawable.*;
 import android.util.*;
@@ -34,23 +36,27 @@ public class RenderSystemSimpleDrawable implements SubSystem
 		 * I can't see any other obvious way of doing this sensibly without writing
 		 * lots and lots of boilerplate code 
 		 */
-		drawablesCache = new HashMap<Integer, Drawable>();
-		encacheDrawable( R.drawable.rock2 );
-		/*encacheDrawable( R.drawable.rot2 );
-		encacheDrawable( R.drawable.rot3 );
-		encacheDrawable( R.drawable.spikey_level1 );
-		encacheDrawable( R.drawable.spikey_level2 );
-		encacheDrawable( R.drawable.spikey_level3 );
-		
-		imShip = surfaceView.getContext().getResources().getDrawable( R.drawable.ship );
-		imEvilCube1 = surfaceView.getContext().getResources().getDrawable( R.drawable.evilcube1 );
-		//imEvilCube1 = surfaceView.getContext().getResources().getDrawable( R.drawable.red_ball );
-		 */
+		/*drawablesCache = new HashMap<Integer, Drawable>();
+		/*encacheDrawable( R.drawable.rock2 );
+		encacheDrawable( R.drawable.arrowdot );
+		encacheDrawable( R.drawable.arrowleft );
+		encacheDrawable( R.drawable.arrowup );
+		encacheDrawable( R.drawable.arrowright );
+		encacheDrawable( R.drawable.arrowdown );*/
 	}
 	
 	protected void encacheDrawable( int id )
 	{
+		try
+		{
 		drawablesCache.put( id, surfaceView.getContext().getResources().getDrawable( id ) );
+		}
+		catch (NotFoundException e)
+		{
+			Log.e(getClass().getName(), "Asked to encache a non-existent drawable with id = "+id, e );
+			//for( surfaceView.getContext().getResources() )
+			Log.i( getClass().getName(), "Current drawables:");
+		}
 	}
 	
 	protected void drawBackground()
@@ -77,7 +83,7 @@ public class RenderSystemSimpleDrawable implements SubSystem
 		/**
 		 * just paint everything that has a CAndroidDrawable component
 		 */
-		Set<UUID> allDrawables = entitySystem.getAllEntitiesPossessingComponent( CAndroidDrawable.class );
+		Set<UUID> allDrawables = entitySystem.getAllEntitiesPossessingComponent( CAndroidDrawable.class ); // if you get ConcurrentModificationException's, you're doing it wrong ... should be SINGLE THREADED access to EntityManager!
 		
 		//DEBUG: Log.i(getClass().getName(), "Found "+allDrawables.size()+" CAndroidDrawables to render");
 		
@@ -87,10 +93,19 @@ public class RenderSystemSimpleDrawable implements SubSystem
 		{
 			Position pos = entitySystem.getComponent(entityID, Position.class );
 			
-			Drawable androidDrawable = imEvilCube1;
+			Drawable androidDrawable = null;
 			
-			androidDrawable = drawablesCache.get( entitySystem.getComponent(entityID, CAndroidDrawable.class ).resourceID );
-				
+			//androidDrawable = drawablesCache.get( entitySystem.getComponent(entityID, CAndroidDrawable.class ).resourceID );
+			try
+			{
+				androidDrawable = surfaceView.getContext().getResources().getDrawable( entitySystem.getComponent(entityID, CAndroidDrawable.class ).resourceID );
+			}
+			catch( NotFoundException e )
+			{
+				Log.e(getClass().getName(), "Failed to find the Drawable resource (id = "+entitySystem.getComponent(entityID, CAndroidDrawable.class ).resourceID+") for entity: "+MetaEntity.loadFromEntityManager(entityID), e);
+				continue;
+			}
+			
 			/*
 			 * RectF oval = new RectF( pos.x - 20, pos.y - 20, pos.x + 20, pos.y + 20 );
 			 * 

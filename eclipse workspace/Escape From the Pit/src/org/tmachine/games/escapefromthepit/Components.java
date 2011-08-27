@@ -4,6 +4,25 @@ import com.wikidot.entitysystems.rdbmsbeta.*;
 
 public class Components
 {
+	public static class CTouch implements Component
+	{
+		public enum TouchType
+		{
+			NONE,
+			LEFT,
+			RIGHT,
+			UP,
+			DOWN
+		};
+		
+		public TouchType value;
+		
+		public CTouch( TouchType t )
+		{
+			value = t;
+		}
+	}
+	
 	public static class CAndroidDrawable implements Component
 	{
 		int resourceID;

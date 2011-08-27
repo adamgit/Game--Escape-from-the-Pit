@@ -72,6 +72,8 @@ public class EscapeFromthePitActivity extends BetterActivity
 		SurfaceViewThePit surfaceView = new SurfaceViewThePit( this, game );
 		MainRunThread runGameThread = new MainRunThread( this, em, surfaceView );
 		//runGameThread.setGameResult( gameToStart );
+		TouchListenerPlayerMovement thv = new TouchListenerPlayerMovement();
+		surfaceView.setOnTouchListener(thv);
 		surfaceView.thread = runGameThread;
 		Log.i( getClass().getSimpleName(), "initialized thread and surface" );
 		

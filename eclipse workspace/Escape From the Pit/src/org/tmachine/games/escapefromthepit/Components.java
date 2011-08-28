@@ -4,6 +4,11 @@ import com.wikidot.entitysystems.rdbmsbeta.*;
 
 public class Components
 {
+	public static class CPlayer implements Component
+	{
+		
+	}
+	
 	public static class CTouch implements Component
 	{
 		public enum TouchType
@@ -38,18 +43,18 @@ public class Components
 		}
 	}
 	
-	static class Position implements Component
+	static class CPosition implements Component
 	{
 		float x, y;
 		int width, height;
 		float rotationDegrees;
 		
-		public Position()
+		public CPosition()
 		{
 			// TODO Auto-generated constructor stub
 		}
 		
-		public Position( float x, float y, int width, int height)
+		public CPosition( float x, float y, int width, int height)
 		{
 			this.x = x;
 			this.y = y;

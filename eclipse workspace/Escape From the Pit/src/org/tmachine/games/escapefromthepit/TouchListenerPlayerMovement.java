@@ -26,7 +26,7 @@ public class TouchListenerPlayerMovement implements OnTouchListener
 	{	
 		touchHandler.addAsynchronousTouchInput( new FixedMotionEvent(event) );
 		
-		Log.i(getClass().getSimpleName(), "touch event "+ event.getActionMasked() +"... added to queue! (ref = "+event.hashCode());
+		//Log.i(getClass().getSimpleName(), "touch event "+ event.getActionMasked() +"... added to queue! (ref = "+event.hashCode());
 		return true;
 	}
 }

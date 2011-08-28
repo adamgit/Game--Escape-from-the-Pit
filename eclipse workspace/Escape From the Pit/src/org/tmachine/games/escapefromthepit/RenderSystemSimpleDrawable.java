@@ -4,7 +4,7 @@ import java.util.*;
 
 import org.tmachine.games.escapefromthepit.Components.CAndroidDrawable;
 import org.tmachine.games.escapefromthepit.Components.Movable;
-import org.tmachine.games.escapefromthepit.Components.Position;
+import org.tmachine.games.escapefromthepit.Components.CPosition;
 
 import android.*;
 import android.R.*;
@@ -91,7 +91,7 @@ public class RenderSystemSimpleDrawable implements SubSystem
 		paint.setARGB( 255, 127, 0, 0 );
 		for( UUID entityID : allDrawables )
 		{
-			Position pos = entitySystem.getComponent(entityID, Position.class );
+			CPosition pos = entitySystem.getComponent(entityID, CPosition.class );
 			
 			Drawable androidDrawable = null;
 			
@@ -130,7 +130,7 @@ public class RenderSystemSimpleDrawable implements SubSystem
 	 * @param p Position of the thing you want to draw
 	 * @param d The sprite/rectangle/ellipse/whatever of the thing you want to draw
 	 */
-	protected void positionAndDraw( Position p, Drawable d )
+	protected void positionAndDraw( CPosition p, Drawable d )
 	{
 		int w = p.width < 1 ? d.getIntrinsicWidth() : p.width;
 		int h = p.height < 1 ? d.getIntrinsicHeight() : p.height;
@@ -140,7 +140,7 @@ public class RenderSystemSimpleDrawable implements SubSystem
 	}
 	
 	
-	Position[] starPositions;
+	CPosition[] starPositions;
 	Movable[] starMotions;
 	
 	protected void paintStarfield( Canvas c )
@@ -148,12 +148,12 @@ public class RenderSystemSimpleDrawable implements SubSystem
 		if( starPositions == null )
 		{
 			int MAX_STARS = 60;
-			starPositions = new Position[MAX_STARS];
+			starPositions = new CPosition[MAX_STARS];
 			starMotions = new Movable[MAX_STARS];
 			
 			for( int i = 0; i < starPositions.length; i++ )
 			{
-				starPositions[i] = new Position();
+				starPositions[i] = new CPosition();
 				starPositions[i].x = (float) (Math.random() * c.getWidth());
 				starPositions[i].y = (float) (Math.random() * c.getHeight());
 				starPositions[i].width = 1;
@@ -208,7 +208,7 @@ public class RenderSystemSimpleDrawable implements SubSystem
 		c.drawText("Default Background (stars)", 100, 100, p);
 	}
 	
-	protected boolean isOnscreen( Position p )
+	protected boolean isOnscreen( CPosition p )
 	{
 		return isOnscreen( (int) p.x, (int) p.y, p.width, p.height );
 	}

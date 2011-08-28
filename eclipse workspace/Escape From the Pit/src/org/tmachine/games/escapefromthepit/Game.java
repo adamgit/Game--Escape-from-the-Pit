@@ -176,8 +176,10 @@ public class Game
 			for( int i=0; i<stones.length; i++ )
 			{
 				if( stones[i][k] )
-					new MetaEntity( new Position(50 + 50*i, 50 + 50*k, 50, 50), new CAndroidDrawable( R.drawable.rock2));
+					new MetaEntity( new CPosition(50 + 50*i, 50 + 50*k, 50, 50), new CAndroidDrawable( R.drawable.rock2));
 			}
+		
+		new MetaEntity( "player", new CPlayer(), new CPosition( 300, 300, 100, 100 ), new CAndroidDrawable( R.drawable.personleft ) );
 		
 		/*
 		Position p1 = new Position();
@@ -222,7 +224,7 @@ public class Game
 	{
 		Log.i( getClass().getSimpleName(), "Fixing up positions after a screen-rotate; new width = " + w + ", new height = " + h );
 		
-		Set<UUID> allMovables = em.getAllEntitiesPossessingComponent( Position.class );
+		Set<UUID> allMovables = em.getAllEntitiesPossessingComponent( CPosition.class );
 		
 		/**
 		 * 
@@ -232,7 +234,7 @@ public class Game
 		{
 			MetaEntity e = MetaEntity.loadFromEntityManager(entity);
 			
-			Position pos = e.get( Position.class );
+			CPosition pos = e.get( CPosition.class );
 			
 			if( pos.x - pos.width / 2 < 0 )
 				pos.x = pos.width / 2;

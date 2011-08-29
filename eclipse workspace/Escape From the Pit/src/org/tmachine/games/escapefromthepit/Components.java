@@ -12,6 +12,12 @@ public class Components
 		
 	}
 	
+	public static class CGhost implements Component
+	{
+		float lastDx;
+		float lastDy;
+	}
+	
 	public static class CTunnelCell implements Component
 	{
 		float lightingLevel;
@@ -30,7 +36,8 @@ public class Components
 		public enum CollisionType
 		{
 			PLAYER,
-			STONE_WALL
+			STONE_WALL,
+			GHOST
 		}
 		
 		public CollisionType type;

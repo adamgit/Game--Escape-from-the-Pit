@@ -190,7 +190,7 @@ public class MainRunThread extends Thread implements iRunThread
 				
 				synchronized( surfaceView.getHolder() )
 				{
-					//renderingSystem.drawBackground();
+					renderingSystem.drawBackground();
 					renderingSystem.processOneGameTick( lastFrameTime );
 				}
 				

@@ -170,6 +170,9 @@ public class SubsystemMovementAndCollision implements SubSystem
 					default:
 						return true;
 				}
+				
+			case GHOST:
+				return false;
 			
 			default:
 				return true;

@@ -83,6 +83,9 @@ public class EscapeFromthePitActivity extends BetterActivity
 		runGameThread.orderedSubSystems.addLast(systemTh); // MUST be before the Collision Subsystem
 		TouchListenerPlayerMovement thv = new TouchListenerPlayerMovement( systemTh );
 		
+		SubsystemGhosts systemGhosts = new SubsystemGhosts(em, game);
+		runGameThread.orderedSubSystems.addLast(systemGhosts);
+		
 		SubsystemMovementAndCollision systemCollision = new SubsystemMovementAndCollision( em, renderSystem );
 		runGameThread.orderedSubSystems.addLast(systemCollision);
 		

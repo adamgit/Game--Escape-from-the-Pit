@@ -15,6 +15,8 @@ public class Game
 {
 	int mazeCellWidth = 100;
 	int mazeCellHeight = 100;
+	int widthOfMazeInCells;
+	int heightOfMazeInCells;
 	MazeLocation initialPlayerLocation;
 	
 	public class MazeLocation
@@ -250,8 +252,10 @@ public class Game
 	{
 		Log.i( getClass().getSimpleName(), "game setup starting..." );
 		
-		initialPlayerLocation = new MazeLocation(19, 19);
-		boolean[][] stones = generateMap(21, 21, initialPlayerLocation );
+		widthOfMazeInCells = 9;
+		heightOfMazeInCells = 9;
+		initialPlayerLocation = new MazeLocation( widthOfMazeInCells - 2, heightOfMazeInCells - 2);
+		boolean[][] stones = generateMap( widthOfMazeInCells, heightOfMazeInCells, initialPlayerLocation );
 		
 		createExitHoleIn( stones );
 		
@@ -271,6 +275,17 @@ public class Game
 			}
 		
 		addRopes( stones );
+		
+		for( int i=0; i<5; i++ )
+		{
+			new MetaEntity(
+					new CPosition( mazeCellWidth*(int)(Math.random() * widthOfMazeInCells), mazeCellHeight*(int)(Math.random() * heightOfMazeInCells), mazeCellWidth, mazeCellHeight),
+					new CMovable(),
+					new CCollidable( CollisionType.GHOST ),
+					new CGhost(),
+					new CAndroidDrawable( R.drawable.ghostleft)
+			);
+		}
 		
 		new MetaEntity( "player", 
 				new CPlayer(),

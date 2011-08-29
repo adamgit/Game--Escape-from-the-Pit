@@ -21,6 +21,7 @@ public final class R {
         public static final int personleft=0x7f020007;
         public static final int personright=0x7f020008;
         public static final int rock2=0x7f020009;
+        public static final int ropebody=0x7f02000a;
     }
     public static final class layout {
         public static final int main=0x7f030000;

@@ -7,6 +7,7 @@ import com.wikidot.entitysystems.rdbmsbeta.*;
 import android.app.*;
 import android.content.*;
 import android.graphics.*;
+import android.os.*;
 import android.util.*;
 import android.view.*;
 
@@ -34,14 +35,14 @@ public class MainRunThread extends Thread implements iRunThread
 	 * @param esmc
 	 * @param v
 	 */
-	public MainRunThread( Activity a, EntityManager esmc, SurfaceViewThePit v )
+	public MainRunThread( Activity a, EntityManager esmc, SurfaceViewThePit v, RenderSystemSimpleDrawable rs )
 	{
 		parentActivity = a;
 		es = esmc;
 		surfaceView = v;
 		
 		//screenManager = new DeviceScreenManager( surfaceView );
-		renderingSystem = new RenderSystemSimpleDrawable( es, surfaceView );
+		renderingSystem = rs;
 		//enemySystem = new EnemySystemWaves( es, renderingSystem ); // needs the rendering system so it can measure sprite-sizes etc
 		
 	}
@@ -85,6 +86,7 @@ public class MainRunThread extends Thread implements iRunThread
 	{
 		if( myThread == null )
 		{
+			Log.i( getClass().getName(), "Main thread.start()" );
 			myThread = new Thread( this );
 			myThread.start();
 		}
@@ -142,7 +144,7 @@ public class MainRunThread extends Thread implements iRunThread
 		long currentFrameIndex = 0;
 		long currentFrameTimesAccumulated = 0;
 		long lastLoopStartTime = System.currentTimeMillis();
-		//Debug.startMethodTracing( );
+		//Debug.startMethodTracing( "escapePitTrace" );
 		
 		//gameResult.status = GameResultStatus.RUNNING;
 		
@@ -188,11 +190,11 @@ public class MainRunThread extends Thread implements iRunThread
 				
 				synchronized( surfaceView.getHolder() )
 				{
-					renderingSystem.drawBackground();
+					//renderingSystem.drawBackground();
 					renderingSystem.processOneGameTick( lastFrameTime );
 				}
 				
-				Thread.sleep( 10 );
+				Thread.sleep( 5 );
 			}
 			catch( GameOverError goe )
 			{

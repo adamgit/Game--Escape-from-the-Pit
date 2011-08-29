@@ -49,6 +49,7 @@ public class SurfaceViewThePit extends SurfaceView implements SurfaceHolder.Call
 		
 		game.fixPositionsAfterPhoneRotated( getContext().getResources().getDisplayMetrics().widthPixels, getContext().getResources().getDisplayMetrics().heightPixels );
 		
+		Log.i( getClass().getName(), "surfaceChanged: about to (re?-)start the main thread..." );
 		thread.start();
 	}
 	

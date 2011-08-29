@@ -3,14 +3,20 @@ package org.tmachine.games.escapefromthepit;
 import java.util.*;
 
 import org.tmachine.games.escapefromthepit.Components.*;
+import org.tmachine.games.escapefromthepit.Components.CCollidable.*;
 
 import com.wikidot.entitysystems.rdbmsbeta.*;
 
 import android.*;
+import android.graphics.*;
 import android.util.*;
 
 public class Game
 {
+	int mazeCellWidth = 100;
+	int mazeCellHeight = 100;
+	MazeLocation initialPlayerLocation;
+	
 	public class MazeLocation
 	{
 			int x;
@@ -96,12 +102,24 @@ public class Game
 			return false;
 	}
 	
-	protected boolean[][] generateMap( int w, int h)
+	protected boolean isFalseAndInBounds( int x, int y, boolean[][] a )
+	{
+		if( x > -1
+		&& y > -1
+		&& x < a.length
+		&& y < a[0].length
+		&& a[x][y])
+			return false;
+		else
+			return true;
+	}
+	
+	protected boolean[][] generateMap( int w, int h, MazeLocation startingCell )
 	{
 		if( w % 2 == 0 ) // algorithm only works correctly with odd width/height array 
-			w -=1;
+			w +=1;
 		if( h % 2 == 0 )
-			h -=1;
+			h +=1;
 		
 		boolean[][] stones = new boolean[w][h];
 		for( int k=0; k<stones[0].length; k++ )
@@ -111,10 +129,23 @@ public class Game
 			}
 		
 		List<PotentialTunnel> wallsThatMightBeTunnelable = new LinkedList<Game.PotentialTunnel>();
-		MazeLocation startingCell = new MazeLocation(1, 1);
+		if( startingCell == null )
+			startingCell = new MazeLocation(1, 1);
 		stones[startingCell.x][startingCell.y] = false;
-		wallsThatMightBeTunnelable.add( new PotentialTunnel( new MazeLocation(startingCell.x+1, startingCell.y), 1, 0));
-		wallsThatMightBeTunnelable.add( new PotentialTunnel( new MazeLocation(startingCell.x, startingCell.y+1), 0, 1));
+		
+		if( startingCell.x+2 < w )
+			wallsThatMightBeTunnelable.add( new PotentialTunnel( new MazeLocation(startingCell.x+1, startingCell.y), 1, 0));
+		else if( startingCell.x-2 > 0 )
+			wallsThatMightBeTunnelable.add( new PotentialTunnel( new MazeLocation(startingCell.x-1, startingCell.y), -1, 0));
+		else
+			throw new IllegalArgumentException("Maze is impossible to generate - no spare cells to left/right of starting cell");
+		
+		if( startingCell.y+2 < h )
+			wallsThatMightBeTunnelable.add( new PotentialTunnel( new MazeLocation(startingCell.x, startingCell.y+1), 0, 1));
+		else if( startingCell.y-2 > 0 )
+			wallsThatMightBeTunnelable.add( new PotentialTunnel( new MazeLocation(startingCell.x, startingCell.y-1), 0, -1));
+		else
+			throw new IllegalArgumentException("Maze is impossible to generate - no spare cells to up/down of starting cell");
 		
 		while( ! wallsThatMightBeTunnelable.isEmpty() )
 		{
@@ -169,67 +200,99 @@ public class Game
 		return stones;
 	}
 	
+	protected void createExitHoleIn( boolean[][] maze )
+	{
+		int x = 0;
+		int y = 1;
+		
+		boolean atLeastOneEmptySquare = false;
+		for( int i = 0; i<maze.length; i++ )
+		{
+			if( ! maze[i][y])
+			{
+				atLeastOneEmptySquare = true;
+				break;
+			}
+		}
+		
+		if( ! atLeastOneEmptySquare )
+		{
+			throw new IllegalArgumentException( "Coudln't find an empty square in the top+1th row of maze = "+maze );
+		}
+		
+		Log.i(getClass().getSimpleName(), "Potentially infinite loop: looking for random spot in top row...");
+		while( maze[x][y] )
+		{
+			x = (int)( Math.random() * maze.length );
+		}
+		Log.i(getClass().getSimpleName(), "...escaped: a potentially infinite loop: looking for random spot in top row");
+		
+		maze[x][0] = false;
+	}
+	
+	protected void addRopes( boolean[][] stones )
+	{
+		for( int k=0; k<stones[0].length; k++ )
+			for( int i=0; i<stones.length; i++ )
+			{
+				if( isFalseAndInBounds(i, k, stones )
+				&& (isFalseAndInBounds(i, k-1, stones )
+					|| isFalseAndInBounds(i, k+1, stones ) )
+					)
+					new MetaEntity( new CPosition( mazeCellWidth*i, mazeCellHeight*k, mazeCellWidth, mazeCellHeight),
+							new CAndroidDrawable( R.drawable.ropebody)
+							//new CAndroidDrawable( surfaceView.getContext().getResources().getDrawable( R.drawable.ropebody)
+					);
+			}
+	}
+	
 	protected void preSetupGame()
 	{
-		boolean[][] stones = generateMap(10, 9);
+		Log.i( getClass().getSimpleName(), "game setup starting..." );
+		
+		initialPlayerLocation = new MazeLocation(19, 19);
+		boolean[][] stones = generateMap(21, 21, initialPlayerLocation );
+		
+		createExitHoleIn( stones );
+		
 		for( int k=0; k<stones[0].length; k++ )
 			for( int i=0; i<stones.length; i++ )
 			{
 				if( stones[i][k] )
-					new MetaEntity( new CPosition(50 + 50*i, 50 + 50*k, 50, 50), new CAndroidDrawable( R.drawable.rock2));
+					new MetaEntity( new CPosition( mazeCellWidth*i, mazeCellHeight*k, mazeCellWidth, mazeCellHeight),
+							new CAndroidDrawable( R.drawable.rock2),
+							new CCollidable( CollisionType.STONE_WALL)
+					);
+				else
+					new MetaEntity( new CPosition( mazeCellWidth*i, mazeCellHeight*k, mazeCellWidth, mazeCellHeight),
+							new CTunnelCell( 0f ),
+							new CDrawableRectangle( Color.DKGRAY )
+					);
 			}
 		
-		new MetaEntity( "player", new CPlayer(), new CPosition( 300, 300, 100, 100 ), new CAndroidDrawable( R.drawable.personleft ) );
+		addRopes( stones );
 		
-		/*
-		Position p1 = new Position();
-		StraightShooter sh1 = new StraightShooter();
-		StraightShooter sh2 = new StraightShooter();
-		Destroyable des = new Destroyable();
+		new MetaEntity( "player", 
+				new CPlayer(),
+				new CMovable(),
+				new CPosition( mazeCellWidth * initialPlayerLocation.x, mazeCellHeight * initialPlayerLocation.y, mazeCellWidth, mazeCellHeight ),
+				new CCollidable( CollisionType.PLAYER ),
+				new CAndroidDrawable( R.drawable.personleft ) );
 		
-		MetaEntity ship = getShip();
-		
-		if( null == ship )
-		{
-			Log.i( getClass().getSimpleName(), "Creating a new ship inside the ES; none already existed; ES = " + MetaEntity.defaultEntitySystem );
-			ship = new MetaEntity( "PlayerShip", new PlayerShip(), p1, new Movable(), sh1, sh2, des );
-		}
-		
-		p1.width = renderingSystem.imShip.getIntrinsicWidth();
-		p1.height = renderingSystem.imShip.getIntrinsicHeight();
-		
-		sh1.fireProbability = 1.0f;
-		sh1.fireRateMillis = 1000;
-		sh1.shotDamage = 1;
-		sh1.shotDx = 0;
-		sh1.shotDy = -10f;
-		sh1.shotRelativeOriginX = -18f;
-		sh1.shotRelativeOriginY = -5f;
-		sh1.alliedWithPlayer = true;
-		
-		sh2.fireProbability = 1.0f;
-		sh2.fireRateMillis = 1000;
-		sh2.shotDamage = 1;
-		sh2.shotDx = 0;
-		sh2.shotDy = -10f;
-		sh2.shotRelativeOriginX = 18f;
-		sh2.shotRelativeOriginY = -5f;
-		sh2.alliedWithPlayer = true;
-		
-		des.totalHealth = des.remainingHealth = 5;
-		*/
+		Log.i( getClass().getSimpleName(), "...game setup complete" );
 	}
 	
 	protected void fixPositionsAfterPhoneRotated( int w, int h )
 	{
 		Log.i( getClass().getSimpleName(), "Fixing up positions after a screen-rotate; new width = " + w + ", new height = " + h );
 		
-		Set<UUID> allMovables = em.getAllEntitiesPossessingComponent( CPosition.class );
 		
 		/**
 		 * 
 		 */
-		if( false) 
+		if( false)
+		{
+			Set<UUID> allMovables = em.getAllEntitiesPossessingComponent( CPosition.class );
 			for( UUID entity : allMovables )
 		{
 			MetaEntity e = MetaEntity.loadFromEntityManager(entity);
@@ -245,6 +308,7 @@ public class Game
 				pos.y = pos.height / 2;
 			if( pos.y + pos.height / 2 > h )
 				pos.y = h - pos.height / 2;
+		}
 		}
 	}
 }

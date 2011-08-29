@@ -19,6 +19,8 @@ public class SubsystemTouchHandler implements SubSystem
 	float lastX, lastY;
 	MetaEntity onScreenArrowIndicator;
 	
+	float lastTickDx, lastTickDy;
+	
 	@Override
 	public void processOneGameTick(long lastFrameTime)
 	{
@@ -48,50 +50,65 @@ public class SubsystemTouchHandler implements SubSystem
 			{
 				MetaEntity player = MetaEntity.loadFromEntityManager( em.getAllEntitiesPossessingComponent(CPlayer.class).iterator().next() );
 				float thresholdForIgnoringInput = 2;
+				
 				if( Math.abs(initialX-lastX) > Math.abs(initialY - lastY) )
+					player.get( CMovable.class ).preferXMovesToYMoves = true;
+				else
+					player.get( CMovable.class ).preferXMovesToYMoves = false;
+				
+				//if( Math.abs(initialX-lastX) > Math.abs(initialY - lastY) )
 				{
 					if( Math.abs(initialX-lastX) > thresholdForIgnoringInput )
 						if( initialX > lastX )
 						{
-							CPosition pos = player.get(CPosition.class);
-							pos.x -= 10;
+							lastTickDx = -10;
 							player.get(CAndroidDrawable.class).resourceID = R.drawable.personleft;
+							player.get(CAndroidDrawable.class).resource = null;
 							//"left arrow"
 							onScreenArrowIndicator.get( CAndroidDrawable.class ).resourceID = ( R.drawable.arrowleft);
+							onScreenArrowIndicator.get( CAndroidDrawable.class ).resource = null;
 							onScreenArrowIndicator.get( CTouch.class ).value = TouchType.LEFT;
 						}
 						else
 						{
-							CPosition pos = player.get(CPosition.class);
-							pos.x += 10;
+							lastTickDx = +10;
 							player.get(CAndroidDrawable.class).resourceID = R.drawable.personright;
+							player.get(CAndroidDrawable.class).resource = null;
 							onScreenArrowIndicator.get( CAndroidDrawable.class ).resourceID = ( R.drawable.arrowright);
+							onScreenArrowIndicator.get( CAndroidDrawable.class ).resource = null;
 							onScreenArrowIndicator.get( CTouch.class ).value = TouchType.RIGHT;
 						}
+					else
+						;//player.get(CMovable.class).dx = 0;
 				}
-				else if( Math.abs(initialX-lastX) < Math.abs(initialY - lastY) )
+				//else if( Math.abs(initialX-lastX) < Math.abs(initialY - lastY) )
 				{
 					if( Math.abs(initialY-lastY) > thresholdForIgnoringInput )
 						if( initialY > lastY )
 						{	
-							CPosition pos = player.get(CPosition.class);
-							pos.y -= 10;
+							lastTickDy = -10;
 							onScreenArrowIndicator.get( CAndroidDrawable.class ).resourceID = ( R.drawable.arrowup);
+							onScreenArrowIndicator.get( CAndroidDrawable.class ).resource = null;
 							onScreenArrowIndicator.get( CTouch.class ).value = TouchType.UP;
 						}
 						else
 						{
-							CPosition pos = player.get(CPosition.class);
-							pos.y += 10;
+							lastTickDy = +10;
 							onScreenArrowIndicator.get( CAndroidDrawable.class ).resourceID = ( R.drawable.arrowdown );
+							onScreenArrowIndicator.get( CAndroidDrawable.class ).resource = null;
 							onScreenArrowIndicator.get( CTouch.class ).value = TouchType.DOWN;
 						}
+					else
+						;//player.get(CMovable.class).dy = 0;
 				}
-				else
+				/*else
 				{
 					onScreenArrowIndicator.get( CAndroidDrawable.class ).resourceID = ( R.drawable.arrowdot);
 					onScreenArrowIndicator.get( CTouch.class ).value = TouchType.NONE;
-				}
+				}*/
+				
+				player.get(CMovable.class).dx = lastTickDx;
+				player.get(CMovable.class).dy = lastTickDy;
 			}
 
 			pendingMotionEvents.clear();
@@ -120,7 +137,10 @@ public class SubsystemTouchHandler implements SubSystem
 	protected void touch_up( float x, float y )
 	{
 		onScreenArrowIndicator.kill();
-		onScreenArrowIndicator = null;		
+		onScreenArrowIndicator = null;	
+		
+		lastTickDx = 0;
+		lastTickDy = 0;
 	}
 	
 	

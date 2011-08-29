@@ -2,6 +2,8 @@ package org.tmachine.games.escapefromthepit;
 
 import java.util.*;
 
+import org.tmachine.games.escapefromthepit.Components.CPosition;
+
 import android.os.*;
 import android.util.*;
 import android.view.*;
@@ -52,6 +54,8 @@ public class EscapeFromthePitActivity extends BetterActivity
 	
 	protected Object handleAutoRotateSaveState()
 	{
+		Log.i(""+this.getClass(), "asked to prep object to save state prior to autorotate");
+		
 		ArrayList<EntityManager> l = new ArrayList<EntityManager>();
 		l.add( em );
 		return l;
@@ -70,13 +74,20 @@ public class EscapeFromthePitActivity extends BetterActivity
 		 * create the surface + thread
 		 */
 		SurfaceViewThePit surfaceView = new SurfaceViewThePit( this, game );
-		MainRunThread runGameThread = new MainRunThread( this, em, surfaceView );
+		RenderSystemSimpleDrawable renderSystem = new RenderSystemSimpleDrawable(em, surfaceView, game );
+		MainRunThread runGameThread = new MainRunThread( this, em, surfaceView, renderSystem );
 		runGameThread.loadAllCoreSubSystems();
 		
 		//runGameThread.setGameResult( gameToStart );
 		SubsystemTouchHandler systemTh = new SubsystemTouchHandler(em);
-		runGameThread.orderedSubSystems.addLast(systemTh);
+		runGameThread.orderedSubSystems.addLast(systemTh); // MUST be before the Collision Subsystem
 		TouchListenerPlayerMovement thv = new TouchListenerPlayerMovement( systemTh );
+		
+		SubsystemMovementAndCollision systemCollision = new SubsystemMovementAndCollision( em, renderSystem );
+		runGameThread.orderedSubSystems.addLast(systemCollision);
+		
+		SubsystemLighting systemLighting = new SubsystemLighting(em, game);
+		runGameThread.orderedSubSystems.addLast(systemLighting);
 		
 		surfaceView.setOnTouchListener(thv);
 		surfaceView.thread = runGameThread;
@@ -86,6 +97,7 @@ public class EscapeFromthePitActivity extends BetterActivity
 		 * Finally ... tell the game that the ES is now valid, it's ship reference is OK, and it can do game-setup
 		 */
 		game.preSetupGame();
+		renderSystem.shiftCanvasToKeepPositionOnScreen( new CPosition(game.initialPlayerLocation.x, game.initialPlayerLocation.y, game.mazeCellWidth, game.mazeCellHeight) );
 		
 		// turn off the window's title bar
 		requestWindowFeature( Window.FEATURE_NO_TITLE );

@@ -6,6 +6,7 @@ import org.tmachine.games.escapefromthepit.Components.CAndroidDrawable;
 import org.tmachine.games.escapefromthepit.Components.CDrawableRectangle;
 import org.tmachine.games.escapefromthepit.Components.CMovable;
 import org.tmachine.games.escapefromthepit.Components.CPosition;
+import org.tmachine.games.escapefromthepit.Components.CTouch;
 
 import android.*;
 import android.R.*;
@@ -118,6 +119,7 @@ public class RenderSystemSimpleDrawable implements SubSystem
 		for( UUID entityID : allDrawables )
 		{
 			CPosition pos = entitySystem.getComponent(entityID, CPosition.class );
+			CAndroidDrawable dra = entitySystem.getComponent(entityID, CAndroidDrawable.class );
 			
 			Drawable androidDrawable = null;
 			
@@ -125,14 +127,14 @@ public class RenderSystemSimpleDrawable implements SubSystem
 			try
 			{
 				//androidDrawable = surfaceView.getContext().getResources().getDrawable( entitySystem.getComponent(entityID, CAndroidDrawable.class ).resourceID );
-				androidDrawable = entitySystem.getComponent(entityID, CAndroidDrawable.class ).resource;
+				androidDrawable = dra.resource;
 				if( androidDrawable == null )
-					androidDrawable = entitySystem.getComponent(entityID, CAndroidDrawable.class ).resource = surfaceView.getContext().getResources().getDrawable( entitySystem.getComponent(entityID, CAndroidDrawable.class ).resourceID ); 
+					androidDrawable = dra.resource = surfaceView.getContext().getResources().getDrawable( dra.resourceID ); 
 					
 			}
 			catch( NotFoundException e )
 			{
-				Log.e(getClass().getName(), "Failed to find the Drawable resource (id = "+entitySystem.getComponent(entityID, CAndroidDrawable.class ).resourceID+") for entity: "+MetaEntity.loadFromEntityManager(entityID), e);
+				Log.e(getClass().getName(), "Failed to find the Drawable resource (id = "+dra.resourceID+") for entity: "+MetaEntity.loadFromEntityManager(entityID), e);
 				continue;
 			}
 			
@@ -147,7 +149,13 @@ public class RenderSystemSimpleDrawable implements SubSystem
 			canvas.rotate( pos.rotationDegrees, pos.x, pos.y );
 			}
 			
-			positionAndDraw( pos, androidDrawable );
+			CPosition positionToUse = pos;
+			if( dra.ignoresCanvasTranslation )
+			{
+				positionToUse = new CPosition( pos.x - canvasTranslationX, pos.y - canvasTranslationY, pos.width, pos.height );
+			}
+			
+			positionAndDraw( positionToUse, androidDrawable );
 			
 			if( pos.rotationDegrees != 0 )
 				canvas.restore();

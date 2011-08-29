@@ -81,6 +81,7 @@ public class Components
 	{
 		int resourceID;
 		Drawable resource;
+		boolean ignoresCanvasTranslation;
 		
 		public CAndroidDrawable()
 		{
@@ -90,6 +91,12 @@ public class Components
 		public CAndroidDrawable( int rid )
 		{
 			resourceID = rid;
+		}
+		
+		public CAndroidDrawable( int rid, boolean ignoresCT )
+		{
+			this( rid );
+			ignoresCanvasTranslation = ignoresCT;
 		}
 		
 		public CAndroidDrawable( Drawable d )

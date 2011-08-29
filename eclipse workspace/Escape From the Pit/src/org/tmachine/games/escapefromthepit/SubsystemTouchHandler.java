@@ -125,7 +125,10 @@ public class SubsystemTouchHandler implements SubSystem
 	protected void touch_start( float x, float y )
 	{
 		//Log.i(getClass()+"", "touch_start: adding a dot arrow");
-		onScreenArrowIndicator = new MetaEntity( "dot arrow initial", new CPosition( 300, 300, 100, 100), new CAndroidDrawable( R.drawable.arrowdot), new CTouch( TouchType.NONE ) );
+		onScreenArrowIndicator = new MetaEntity( "dot arrow initial",
+				new CPosition( 300, 300, 100, 100),
+				new CAndroidDrawable( R.drawable.arrowdot, true),
+				new CTouch( TouchType.NONE ) );
 	}
 	
 	protected void touch_move( float x, float y )

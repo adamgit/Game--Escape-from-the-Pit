@@ -80,7 +80,7 @@ public class Components
 	public static class CAndroidDrawable implements Component
 	{
 		int resourceID;
-		Drawable resource;
+		transient Drawable resource;
 		boolean ignoresCanvasTranslation;
 		
 		public CAndroidDrawable()

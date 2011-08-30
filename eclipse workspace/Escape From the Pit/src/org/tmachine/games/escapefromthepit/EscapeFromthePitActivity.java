@@ -4,6 +4,7 @@ import java.util.*;
 
 import org.tmachine.games.escapefromthepit.Components.CPosition;
 
+import android.content.*;
 import android.os.*;
 import android.util.*;
 import android.view.*;
@@ -91,6 +92,9 @@ public class EscapeFromthePitActivity extends BetterActivity
 		
 		SubsystemLighting systemLighting = new SubsystemLighting(em, game);
 		runGameThread.orderedSubSystems.addLast(systemLighting);
+		
+		SubsystemTriggers systemTriggers = new SubsystemTriggers(this, em, game);
+		runGameThread.orderedSubSystems.addLast(systemTriggers);
 		
 		surfaceView.setOnTouchListener(thv);
 		surfaceView.thread = runGameThread;

@@ -11,6 +11,13 @@ import android.view.*;
 import com.wikidot.entitysystems.rdbmsbeta.*;
 import com.wikidot.entitysystems.rdbmsbeta.examplecomponents.*;
 
+/**
+ * This system is a good example of how systems are a conceptual interface to the outside-world:
+ * it takes real-world touch imput and converts it into data that interacts nicely with the ES.
+ * 
+ * @author adam
+ *
+ */
 public class SubsystemTouchHandler implements SubSystem
 {
 	LinkedList<FixedMotionEvent> pendingMotionEvents;

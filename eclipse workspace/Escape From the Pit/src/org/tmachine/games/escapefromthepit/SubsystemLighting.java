@@ -9,6 +9,12 @@ import android.graphics.*;
 import com.wikidot.entitysystems.rdbmsbeta.*;
 import com.wikidot.entitysystems.rdbmsbeta.examplecomponents.*;
 
+/**
+ * Light the tunnels based on distance from the player
+ * 
+ * @author adam
+ *
+ */
 public class SubsystemLighting implements SubSystem
 {
 	EntityManager em;

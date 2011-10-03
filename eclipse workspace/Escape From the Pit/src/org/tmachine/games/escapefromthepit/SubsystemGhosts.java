@@ -6,6 +6,12 @@ import org.tmachine.games.escapefromthepit.Components.*;
 
 import com.wikidot.entitysystems.rdbmsbeta.*;
 
+/**
+ * Move ghosts around, that's all
+ * 
+ * @author adam
+ *
+ */
 public class SubsystemGhosts implements SubSystem
 {
 	EntityManager em;

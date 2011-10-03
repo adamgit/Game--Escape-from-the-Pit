@@ -9,6 +9,12 @@ import android.util.*;
 import com.wikidot.entitysystems.rdbmsbeta.*;
 import com.wikidot.entitysystems.rdbmsbeta.examplecomponents.*;
 
+/**
+ * Very very simple: I needed to detect that the player had WON by escaping from the maze
+ * 
+ * @author adam
+ *
+ */
 public class SubsystemTriggers implements SubSystem
 {
 	EscapeFromthePitActivity activityForGame;

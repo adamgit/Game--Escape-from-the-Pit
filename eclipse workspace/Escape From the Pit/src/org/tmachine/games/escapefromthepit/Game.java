@@ -11,6 +11,15 @@ import android.*;
 import android.graphics.*;
 import android.util.*;
 
+/**
+ * "Game" is slightly confusing as a name - all this class really does is to generate random mazes,
+ * and to convert the raw data into the Entities needed to render + process collision detection.
+ * 
+ * Look at preSetupGame for most of the entity stuff
+ * 
+ * @author adam
+ *
+ */
 public class Game
 {
 	int mazeCellWidth = 100;
@@ -295,35 +304,5 @@ public class Game
 				new CAndroidDrawable( R.drawable.personleft ) );
 		
 		Log.i( getClass().getSimpleName(), "...game setup complete" );
-	}
-	
-	protected void fixPositionsAfterPhoneRotated( int w, int h )
-	{
-		Log.i( getClass().getSimpleName(), "Fixing up positions after a screen-rotate; new width = " + w + ", new height = " + h );
-		
-		
-		/**
-		 * 
-		 */
-		if( false)
-		{
-			Set<UUID> allMovables = em.getAllEntitiesPossessingComponent( CPosition.class );
-			for( UUID entity : allMovables )
-		{
-			MetaEntity e = MetaEntity.loadFromEntityManager(entity);
-			
-			CPosition pos = e.get( CPosition.class );
-			
-			if( pos.x - pos.width / 2 < 0 )
-				pos.x = pos.width / 2;
-			if( pos.x + pos.width / 2 > w )
-				pos.x = w - pos.width / 2;
-			
-			if( pos.y - pos.height / 2 < 0 )
-				pos.y = pos.height / 2;
-			if( pos.y + pos.height / 2 > h )
-				pos.y = h - pos.height / 2;
-		}
-		}
 	}
 }

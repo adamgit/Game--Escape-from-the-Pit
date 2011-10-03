@@ -9,6 +9,12 @@ import android.util.*;
 
 import com.wikidot.entitysystems.rdbmsbeta.*;
 
+/**
+ * The main Collision Detection system...
+ * 
+ * @author adam
+ *
+ */
 public class SubsystemMovementAndCollision implements SubSystem
 {
 	public static final boolean debug = false;
@@ -147,6 +153,16 @@ public class SubsystemMovementAndCollision implements SubSystem
 		}
 	}
 	
+	/**
+	 * The most basic CD system I'm willing to implement is a swept-volume rects.
+	 * 
+	 * This would be really crappy - except in this game, we only allow horizontal/vertical
+	 * movement, and so in fact this is PERFECT!
+	 * 
+	 * @param p
+	 * @param m
+	 * @return
+	 */
 	protected RectF sweptRectFor( CPosition p, CMovable m )
 	{
 		float left = m.dx > 0 ? p.x : p.x + m.dx;
@@ -157,6 +173,13 @@ public class SubsystemMovementAndCollision implements SubSystem
 		return new RectF(left, top, right, bottom);
 	}
 
+	/**
+	 * Used to decide whether a collision PREVENTS the moving object from actually moving
+	 * 
+	 * @param mover
+	 * @param receiver
+	 * @return
+	 */
 	protected boolean isBlockedBy( CCollidable mover, CCollidable receiver )
 	{
 		switch( mover.type )

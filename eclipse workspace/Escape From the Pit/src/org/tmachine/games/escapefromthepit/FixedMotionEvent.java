@@ -3,7 +3,11 @@ package org.tmachine.games.escapefromthepit;
 import android.view.*;
 
 /**
- * This is a workaround for a MASSIVE bug in Android, affecting all versions up to and including 2.2 (possibly up to 3.2 - unconfirmed)
+ * This is a workaround for what appears to be a MASSIVE bug in Android, affecting all versions up to and including 2.2 (possibly up to 3.2 - unconfirmed)
+ * 
+ * NB: I haven't checked this in detail, I discovered it by trial-and-error late at night while working on the 24 hour time-limit;
+ * take this with a pinch of salt - I was pretty unhappy when I discovered what was causing my bugs - an apparent stupid design
+ * decision in the Android motion events :(.
  * 
  * The class "MotionEvent" is incorrectly implemented by Google, and a single MotionEvent object is re-used on every touch,
  * 

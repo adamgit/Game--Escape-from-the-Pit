@@ -11,6 +11,13 @@ import android.view.*;
 
 import com.wikidot.entitysystems.rdbmsbeta.*;
 
+/**
+ * Starts the game, starts the rendering thread, etc - but you can hit back to go back to the main game menu
+ * allowing Android to reset / restart the game when you've finished / won
+ * 
+ * @author adam
+ *
+ */
 public class EscapeFromthePitActivity extends BetterActivity
 {
 	EntityManager em;

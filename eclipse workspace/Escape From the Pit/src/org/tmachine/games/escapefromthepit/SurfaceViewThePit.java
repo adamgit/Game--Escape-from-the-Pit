@@ -41,13 +41,8 @@ public class SurfaceViewThePit extends SurfaceView implements SurfaceHolder.Call
 		/**
 		 * This is stupid; Google/Android says to do this in surfaceCreated, but their own code screws-up the width/height
 		 * if you follow their sample code.
-		 * Bad code from Android/Google/etc for being too stupid to understand the importance of width/height numbers on Auto-Rotate!
+		 * Bad code from Android/Google/etc for being too ignorant to understand the importance of width/height numbers on Auto-Rotate!
 		 */
-		
-		
-		//thread.resetShipPosition();
-		
-		game.fixPositionsAfterPhoneRotated( getContext().getResources().getDisplayMetrics().widthPixels, getContext().getResources().getDisplayMetrics().heightPixels );
 		
 		Log.i( getClass().getName(), "surfaceChanged: about to (re?-)start the main thread..." );
 		thread.start();
@@ -60,53 +55,31 @@ public class SurfaceViewThePit extends SurfaceView implements SurfaceHolder.Call
 		thread.waitUntilStoppedBecauseAndroidHasABrokenJVM();
 	}
 	
-	/*@Override public boolean onKeyDown( int keyCode, KeyEvent event )
-	{
-		if( keyCode == KeyEvent.KEYCODE_DPAD_CENTER )
-		{
-			Log.i( getClass().getName(), "DPAD_CENTER pressed; killing the main thread (debug feature: forces run thread to die, e.g. for tracing info)");
-			thread.myThread = null;
-		}
-		
-		return super.onKeyDown( keyCode, event );
-	}*/
-	
+	/**
+	 * I think this is unused - I factored it out into the {@link TouchListenerPlayerMovement} class instead
+	 */
 	protected float thisTouchX, thisTouchY;
 	
+	/**
+	 * I think this is unused - I factored it out into the {@link TouchListenerPlayerMovement} class instead
+	 */
 	private void touch_start( float x, float y )
 	{
 		thisTouchX = x;
 		thisTouchY = y;
 	}
 	
-	/*
-	private void touch_move( float x, float y )
-	{
-		if( thread.isRunning() ) // only move if the game is actually running
-		{
-			Entity ship = thread.getShip();
-			
-			if( ship != null )
-			{
-				Movable shipMove = es.getComponent( ship, Movable.class );
-				
-				shipMove.dx += x - thisTouchX;
-				shipMove.dy += y - thisTouchY;
-				
-				// Log.i( getClass().getName(), "touch moved; moving ship from x = "+shipPosition.x+" to x = "+(shipPosition.x + shipMove.dx) );
-				
-				thisTouchX = x;
-				thisTouchY = y;
-			}
-		}
-	}
-	*/
-	
+	/**
+	 * I think this is unused - I factored it out into the {@link TouchListenerPlayerMovement} class instead
+	 */
 	private void touch_up()
 	{
 		
 	}
 	
+	/**
+	 * I think this is unused - I factored it out into the {@link TouchListenerPlayerMovement} class instead
+	 */
 	@Override public boolean onTouchEvent( MotionEvent event )
 	{
 		

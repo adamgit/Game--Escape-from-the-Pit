@@ -27,10 +27,7 @@ public class MainRunThread extends Thread implements iRunThread
 	//protected GameResult gameResult;
 	protected RenderSystemSimpleDrawable renderingSystem;
 	
-	/**
-	 * Remember to call {@link #setGameResult(GameResult)} as well with your new or resumed game data
-	 * (default value is null) before you start the thread.
-	 * 
+	/** 
 	 * @param a
 	 * @param esmc
 	 * @param v
@@ -47,14 +44,8 @@ public class MainRunThread extends Thread implements iRunThread
 		
 	}
 	
-	/*public void setGameResult( GameResult gr )
-	{
-		gameResult = gr;
-		enemySystem.gameResult = gameResult;
-	}*
-	
 	/**
-	 * This method is depressing; it exists because the Android maintainers are evil, and couldn't be bothered to implement a core Java Library method which Sun's arrogant language-maintainers marked as "deprecated" about 10 years ago and were too lazy to provide alternatives for - but Android doesn't throw an Error, it simply - SILENTLY - doesn't implement this core method; that's a pretty major bug!
+	 * Simulate Thread.stop, because Sun refuses to.
 	 */
 	public void waitUntilStoppedBecauseAndroidHasABrokenJVM()
 	{
@@ -98,13 +89,7 @@ public class MainRunThread extends Thread implements iRunThread
 	
 	public void loadFirstLevel()
 	{
-		/**
-		 * If there are no waves, create a new one to start the game...
-		 */
-		/*if( es.getAllEntitiesPossessing( Wave.class ).size() < 1 )
-		{
-			enemySystem.createWave( 5, 1, 10f ); // Create the initial wave
-		}*/
+		
 	}
 	
 	LinkedList<SubSystem> orderedSubSystems;
@@ -113,27 +98,11 @@ public class MainRunThread extends Thread implements iRunThread
 	{
 		orderedSubSystems = new LinkedList<SubSystem>();
 		
-		//orderedSubSystems.add( new EnemySystemWavesPatterned( null, es, renderingSystem ) ); // needs the rendering system so it can measure sprite-sizes etc
-		
-		//loopMoveAll( c, lastFrameTime ); // will move EVERYTHING that is movable and has a position
-		
-		//loopFireWeapons( lastFrameTime );
-		
 		/**
-		 * This *REQUIRES* that the Canvas be static and not change underneath it If the screen changes size halfway through this method call it *MUST* be cancelled
+		 * Here we'd normally load all the SubSystems, and add them in the order we want them to process each game-tick
+		 * 
+		 * But quick-n-dirty I ended up loading them all inside EscapeFromThePitActivity instead
 		 */
-		/*List<Entity> emigrants = loopCheckAndSelectEmigrants( c );
-		if( myThread != null )
-		{
-			//Log.i( getClass().getSimpleName(), "Allegedly, the loop is safe; processing emigrants" );
-			processEmigrants( emigrants );
-		}
-		else
-		{
-			Log.w( getClass().getName(), "WARNING: loop is unsafe, throwing away the emigrants-set" );
-		}*/
-		
-		//loopCheckShotHits();
 	}
 	
 	public void run()
@@ -162,17 +131,6 @@ public class MainRunThread extends Thread implements iRunThread
 			long loopStartTime = System.currentTimeMillis();
 			long lastFrameTime = loopStartTime - lastLoopStartTime;
 			currentFrameTimesAccumulated += lastFrameTime;
-			
-			{
-				/**
-				 * Update the gameResult stats...
-				 * 
-				 * BUG in Android threading system, this var fails to write if you put it outside
-				 * the while loop; can't see why, but if it's just the threading failing to update
-				 * vars, then that's a very serious bug in the Android JVM 
-				 */
-				//gameResult.millisecondsPlayed += lastFrameTime;
-			}
 		
 			Canvas c = surfaceView.getHolder().lockCanvas( null );
 			try
@@ -244,8 +202,6 @@ public class MainRunThread extends Thread implements iRunThread
 			 * a great way to manage inter-Activity communication (is there a better way?)
 			 */
 			Intent i = parentActivity.getIntent();
-			//gameResult.status = GameResultStatus.GAMEOVER;
-			//i.putExtra( "com.redglasses.invaders.gameresult", gameResult );
 			parentActivity.setResult( Activity.RESULT_OK, i );
 			parentActivity.finish();
 		}

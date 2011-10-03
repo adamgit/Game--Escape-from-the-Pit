@@ -1,5 +1,12 @@
 package org.tmachine.games.escapefromthepit;
 
+/**
+ * Shim class that tries to hide some of the worst design mistakes of the Android "Activity" class
+ * and API design.
+ * 
+ * Very basic - just enough so I could get the main game working quickly
+ */
+
 import android.app.*;
 import android.content.*;
 import android.os.*;
@@ -14,7 +21,7 @@ public abstract class BetterActivity extends Activity
 		 * Code taken verbatim from Android official example source code; we're
 		 * trying to simulate a thread.stop, since Android completely ignores
 		 * that call, hence making app-data invalid, and ultimately crashing
-		 * apps Bastards.
+		 * apps.
 		 */
 		boolean retry = true;
 		while (retry)
@@ -103,7 +110,7 @@ public abstract class BetterActivity extends Activity
 		Log.i(getClass().getSimpleName(), "SAVING INSTANCE STATE");
 
 		outState.putString("test",
-				"testing this freaky piece of shit from google");
+				"testing this freaky thing");
 	}
 
 	@Override
@@ -115,14 +122,14 @@ public abstract class BetterActivity extends Activity
 		Object result = handleAutoRotateSaveState();
 
 		if (result == null)
-			return "Placeholder value for onRetainNonConfigurationInstance() so that we can deduce an auto-rotate happened (Android sucks)";
+			return "Placeholder value for onRetainNonConfigurationInstance() so that we can deduce an auto-rotate happened";
 		else
 			return result;
 	}
 
 	/**
 	 * Called in LOTS of places when the activity is NOT created - Android
-	 * architecture design is appalling with lifecycle management.
+	 * architecture design is ...not good ... with lifecycle management.
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState)

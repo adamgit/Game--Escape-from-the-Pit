@@ -37,19 +37,6 @@ public class RenderSystemSimpleDrawable implements SubSystem
 		entitySystem = em;
 		surfaceView = sv;
 		game = g;
-	
-		/**
-		 * This is terrible app design, but it seems that Android forces us to do it;
-		 * I can't see any other obvious way of doing this sensibly without writing
-		 * lots and lots of boilerplate code 
-		 */
-		/*drawablesCache = new HashMap<Integer, Drawable>();
-		/*encacheDrawable( R.drawable.rock2 );
-		encacheDrawable( R.drawable.arrowdot );
-		encacheDrawable( R.drawable.arrowleft );
-		encacheDrawable( R.drawable.arrowup );
-		encacheDrawable( R.drawable.arrowright );
-		encacheDrawable( R.drawable.arrowdown );*/
 	}
 	
 	protected void encacheDrawable( int id )
@@ -207,6 +194,14 @@ public class RenderSystemSimpleDrawable implements SubSystem
 	CPosition[] starPositions;
 	CMovable[] starMotions;
 	
+	/**
+	 * A simple starfield I include in my android new-project template to check that I've got
+	 * rendering and threading runnning correctly - and to check which way is "up" on the canvas.
+	 * 
+	 * Feel free to ignore / delete.
+	 * 
+	 * @param c
+	 */
 	protected void paintStarfield( Canvas c )
 	{
 		if( starPositions == null )

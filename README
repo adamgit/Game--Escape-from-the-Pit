@@ -1,0 +1,15 @@
+This Android game was written in under 48 hours - the code isn't perfect - but it's also a good example of writing an Entity-System based game *quickly*.
+
+If you don't know about Entity Systems, read about them first - e.g. at http://entity-systems.wikidot.com
+
+I'm releasing this code for people who follow the Entity Systems research - if you don't, I'm sorry - you'll get no support from me.
+
+
+Installation
+
+ 1. Download this git repository
+ 2. Open it in Eclipse as a workspace
+ 3. Download the other java proejct - https://github.com/adamgit/Entity-System-RDBMS-Beta--Java-
+ 4. In Eclipse, do "Add Project" and add the directory of that other project - it should create a new project in your workspace, called "EntitySystemJava"
+
+...and then it should all work fine. I'm sure there's something I've forgotten somewhere, but you should be able to sort it out yourself - I'm not really expecting people to USE this code or RUN this project, I'm sharing it as an example of source that you can READ.
